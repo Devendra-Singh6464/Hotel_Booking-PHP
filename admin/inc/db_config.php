@@ -11,7 +11,7 @@ if(!$conn){
 }
 // echo("Connection Successfull");
 
-function filtereation($data){
+function filteration($data){
     foreach($data as $key => $value){
         $data[$key] = trim($value);
         $data[$key] = stripcslashes($value);
@@ -36,6 +36,27 @@ function select($sql, $values, $datatypes){
     }
     else{
         die("Query connot be Prepare - select");
+    }
+}
+
+function update($sql, $values, $datatypes){
+    $conn = $GLOBALS['conn'];
+    if($stmt = mysqli_prepare($conn,$sql))
+    {
+        mysqli_stmt_bind_param($stmt, $datatypes, ...$values);
+        if(mysqli_stmt_execute($stmt))
+        {
+            $res = mysqli_stmt_get_result($stmt);
+            mysqli_stmt_close($stmt);
+            return $res;
+        }
+        else{
+            mysqli_stmt_close($stmt);
+            die("Query connot be executed - Update");
+        }
+    }
+    else{
+        die("Query connot be Prepare - update");
     }
 }
 
