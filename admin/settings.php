@@ -37,7 +37,6 @@ adminLogin();
                     </div>
                 </div>
 
-
                 <!-- General settings Modal -->
                 <div class="modal fade" id="general-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">
