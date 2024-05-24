@@ -145,7 +145,6 @@ adminLogin();
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Contacts Settings</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="container-fluid p-0">
@@ -200,8 +199,8 @@ adminLogin();
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" onclick="site_title.value = general_data.site_title, site_about.value = general_data.site_about" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
-                                    <button type="button" onclick="upd_general(site_title.value, site_about.value)" class="btn custom-bg text-white shadow-none">SUBMIT</button>
+                                    <button type="button" onclick="contacts_inp(contacts_data)" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
+                                    <button type="submit" class="btn custom-bg text-white shadow-none">SUBMIT</button>
                                 </div>
                             </div>
                         </form>
@@ -218,6 +217,8 @@ adminLogin();
         let general_s_form = document.getElementById('general_s_form');
         let site_title_inp = document.getElementById('site_title_inp');
         let site_about_inp = document.getElementById('site_about_inp');
+
+        let contacts_s_form = document.getElementById('contacts_s_form');
 
 
         function get_general() {
@@ -302,7 +303,7 @@ adminLogin();
             xhr.onload = function() {
                 contacts_data = JSON.parse(this.responseText);
                 contacts_data = Object.values(contacts_data);
-                console.log(contacts_data);
+                // console.log(contacts_data);
 
                 for (i = 0; i < contacts_p_id.length; i++) {
                     document.getElementById(contacts_p_id[i]).innerText = contacts_data[i + 1];
@@ -313,7 +314,49 @@ adminLogin();
         }
 
         function contacts_inp(data){
+            let contacts_inp_id = ['address_inp', 'gmap_inp', 'pn1_inp', 'pn2_inp', 'email_inp', 'insta_inp', 'fb_inp', 'thrd_inp', 'tw_inp'];
+
+            for(i=0;i<contacts_inp_id.length;i++){
+                document.getElementById(contacts_inp_id[i]).value = data[i+1];
+                // console.log(contacts_inp_id[i]);
+                // console.log(data[i+1]);
+            }
+        }
+
+        contacts_s_form.addEventListener('submit', function(e){
+            e.preventDefault();
+            upd_contacts();
+        })
+
+        function upd_contacts(){
+            let index = ['address', 'gmap', 'pn1', 'pn2', 'email', 'insta', 'fb', 'thrd', 'tw'];
+            let contacts_inp_id=  ['address_inp', 'gmap_inp', 'pn1_inp', 'pn2_inp', 'email_inp', 'insta_inp', 'fb_inp', 'thrd_inp', 'tw_inp'];
+
+            let data_str="";
             
+            for(i=0;i<index.length; i++){
+                data_str += index[i] + "=" + document.getElementById(contacts_inp_id[i]).value + '&';
+            }
+            // console.log(data_str);
+            data_str += "upd_contacts";
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "ajax/settings_crud.php", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onload = function(){
+                var myModal = document.getElementById('contacts-s')
+                var modal = bootstrap.Modal.getInstance(myModal);
+                modal.hide();
+
+                if(this.responseText == 1){
+                    alert('success', 'Changes saved!');
+                    get_contacts();
+                }
+                else{
+                    alert('error', 'No changes made!');
+                }
+            }
         }
 
         window.onload = function() {
