@@ -22,7 +22,7 @@
     echo $res;
   }
 
-  if(isset($_POST['upd_general']))
+  if(isset($_POST['upd_shutdown']))
   {
     $frm_data = ($_POST['upd_shutdown'] == 0) ? 1 : 0;
     $q = "UPDATE `settings` SET `shutdown`=? WHERE `sr_no`=?";
@@ -47,7 +47,30 @@
 
     $q = "UPDATE `contact_details` SET `address`=?, `gmap`=?,`pn1`=?,`pn2`=?,`email`=?,`insta`=?,`fb`=?, `thrd`=?, `tw`=?, WHERE `sr_no`=?";
     $values = [$frm_data['address'], $frm_data['gmap'], $frm_data['pn1'], $frm_data['pn2'], $frm_data['email'], $frm_data['insta'], $frm_data['fb'], $frm_data['thrd'], $frm_data['tw'],1];
-    $res = update($q, $values, 'ssssssss');
+    $res = update($q, $values, 'sssssssssi');
     echo $res;
+  }
+
+  if(isset($_POST['add_member']))
+  {
+    $frm_data = filtration($_POST);
+
+    $img_r = uploadImage($_FILES['picture'],ABOUT_FOLDER);
+
+    if($img_r == 'inv_img'){
+      echo  $img_r; //"Invalid image type"; 
+    }
+    else if($img_r == 'inv_zise'){
+      echo  $img_r;  //"Invalid image size:"; 
+    }
+    else if($img_r == 'upd_failed'){
+      echo $img_r;  // "Upload failed:"; 
+    }
+    else{
+      $q = "INSERT INTO `team_details` (`name`, `picture`) VALUES (?,?)";
+      $values = [$frm_data['name'],$img_r];
+      $res = insert($q, $values, 'ss');
+      echo "Member added successfully: $res";
+    }
   }
 ?>

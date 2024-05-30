@@ -1,12 +1,13 @@
 <?php
 
+define('UPLOAD_IMAGE_PATH',$_SERVER['DOCUMENT_ROOT'].'/Hotel_Booking(PHP)/images/');
+define('ABOUT_FOLDER', 'about/'); 
+
 function adminLogin(){
     session_start();
     if(!(isset($_SESSION['adminLogin']) && $_SESSION['adminLogin'] ==true)){
-        echo"<script>
-            window.location.href='index.php'
-        </script>";
-        exit;
+        header('Location: index.php');
+        exit();
     }
     // session_regenerate_id(true);
 }
@@ -19,7 +20,6 @@ function redirect($url){
 }
 
 function alert($type,$msg){
-
     $bs_class = ($type == "success")? "alert-success": "alert-danger";
     echo <<<alert
         <div class="alert $bs_class alert-dismissible fade show custom-alert" role="alert">
@@ -28,4 +28,31 @@ function alert($type,$msg){
         </div>
     alert;
 }
+
+function uploadImage($image, $folder){
+    $valid_mime = ['image/jpeg', 'image/png', 'image/webp'];
+    $img_mime = $image['type'];
+
+    if (!in_array($img_mime,$valid_mime)) {
+        return 'Invalid image mime or format';   // inv_type
+    } 
+    else if (($image['size'] / (1024 * 1024)) > 2) { 
+        return 'Invalid size greater than 2MB';  // inv_size
+    } 
+    else {
+        $ext = pathinfo($image['name'],PATHINFO_EXTENSION);
+        $rname = 'IMG_' .random_int(11111, 99999) . ".$ext";
+        //$rname = uniqid('IMG_') . ".$ext"; // Generate a unique random name
+
+        $img_path = UPLOAD_IMAGE_PATH.$folder.$rname;
+        if(move_uploaded_file($image['tmp_name'], $img_path)) {
+            return $rname;
+        } 
+        else {
+            return 'upd_failed';
+        }
+    }
+}
+
 ?>
+

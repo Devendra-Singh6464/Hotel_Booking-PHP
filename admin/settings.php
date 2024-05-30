@@ -80,7 +80,7 @@ adminLogin();
                     </div>
                 </div>
 
-                <!-- Contact details section -->
+                <!-- Contacts details section -->
                 <div class="card mt-4 border-0 shadow">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
@@ -115,6 +115,7 @@ adminLogin();
                                     <p class="card-text" id="email"></p>
                                 </div>
                             </div>
+
                             <div class="col-lg-6">
                                 <h6 class="card-subtitle mb-1 poppins-regular">Social Links</h6>
                                 <p class="card-text mb-1">
@@ -133,6 +134,12 @@ adminLogin();
                                     <i class="bi bi-twitter-x"></i>
                                     <span id="tw"></span>
                                 </p>
+                                <h6 class="card-subtitle mt-3 poppins-regular">iFrame</h6>
+                                <div class="card mt-1 border-2 shadow ">
+                                    <div class="card-body">
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -206,6 +213,49 @@ adminLogin();
                         </form>
                     </div>
                 </div>
+
+                <!-- Management Team section -->
+                <div class="card border-0 shadow mt-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="card-title m-0 poppins-regular">Management Team</h5>
+                            <button type="button" class="btn btn-dark shadow-none btn-sm" data-bs-toggle="modal" data-bs-target="#team-s">
+                                <i class="bi bi-plus-square"></i> Add
+                            </button>
+                        </div>
+                        <div class="row" id="team-data">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Management Team Modal -->
+                <div class="modal fade" id="team-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form id="team_s_form" method="post" enctype="multipart/form-data">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Add Team Member</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Name</label>
+                                        <input type="text" name="member_name" id="member_name_inp" class="form-control" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Picture</label>
+                                        <input type="file" name="member_picture" id="member_picture_inp" accept=".png, .jpg, .jpeg, .webp" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
+                                    <button type="submit" class="btn custom-bg text-white shadow-none">SUBMIT</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -219,6 +269,10 @@ adminLogin();
         let site_about_inp = document.getElementById('site_about_inp');
 
         let contacts_s_form = document.getElementById('contacts_s_form');
+
+        let team_s_form = document.getElementById('team_s_form');
+        let member_name_inp = document.getElementById('member_name_inp');
+        let member_picture_inp = document.getElementById('member_picture_inp');
 
 
         function get_general() {
@@ -242,7 +296,8 @@ adminLogin();
                 if (general_data.shutdown == 0) {
                     shutdown_toggle.checked = false;
                     shutdown_toggle.value = 0;
-                } else {
+                }
+                else {
                     shutdown_toggle.checked = true;
                     shutdown_toggle.value = 1;
                 }
@@ -253,9 +308,9 @@ adminLogin();
         general_s_form.addEventListener('submit', function(e) {
             e.preventDefault();
             upd_general(site_title_inp.value, site_about_inp.value);
-        })
+        });
 
-        function upd_general(site_title, site_about) {
+        function upd_general(site_title_val, site_about_val) {
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "ajax/settings_crud.php", true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -270,10 +325,9 @@ adminLogin();
                     get_general();
                 } else {
                     alert('error', 'No Changes made!');
-                    site_title_val
                 }
             }
-            xhr.send('site_title=' + site_title + '&site_about=' + site_about + '&upd_general');
+            xhr.send('site_title='+site_title_val+'&site_about='+site_about_val+'&upd_general');
         }
 
         function upd_shutdown(val) {
@@ -282,15 +336,16 @@ adminLogin();
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
             xhr.onload = function() {
-                if (this.responseText == 1) {
-                    alert('Success', 'Site has been Shutdown!');
-                } else {
+                if (this.responseText == 1 && general_data.shutdown == 0) {
+                    alert('success', 'Site has been Shutdown!');
+                } 
+                else {
                     alert('success', 'Shutdown mode off!');
                 }
                 get_general();
             }
 
-            xhr.send('upd_shutdown=' + val);
+            xhr.send('upd_shutdown='+val);
         }
 
         function get_contacts() {
@@ -313,28 +368,28 @@ adminLogin();
             xhr.send('get_contacts');
         }
 
-        function contacts_inp(data){
+        function contacts_inp(data) {
             let contacts_inp_id = ['address_inp', 'gmap_inp', 'pn1_inp', 'pn2_inp', 'email_inp', 'insta_inp', 'fb_inp', 'thrd_inp', 'tw_inp'];
 
-            for(i=0;i<contacts_inp_id.length;i++){
-                document.getElementById(contacts_inp_id[i]).value = data[i+1];
+            for (i = 0; i < contacts_inp_id.length; i++) {
+                document.getElementById(contacts_inp_id[i]).value = data[i + 1];
                 // console.log(contacts_inp_id[i]);
                 // console.log(data[i+1]);
             }
         }
 
-        contacts_s_form.addEventListener('submit', function(e){
+        contacts_s_form.addEventListener('submit', function(e) {
             e.preventDefault();
             upd_contacts();
-        })
+        });
 
-        function upd_contacts(){
+        function upd_contacts() {
             let index = ['address', 'gmap', 'pn1', 'pn2', 'email', 'insta', 'fb', 'thrd', 'tw'];
-            let contacts_inp_id=  ['address_inp', 'gmap_inp', 'pn1_inp', 'pn2_inp', 'email_inp', 'insta_inp', 'fb_inp', 'thrd_inp', 'tw_inp'];
+            let contacts_inp_id = ['address_inp', 'gmap_inp', 'pn1_inp', 'pn2_inp', 'email_inp', 'insta_inp', 'fb_inp', 'thrd_inp', 'tw_inp'];
 
-            let data_str="";
-            
-            for(i=0;i<index.length; i++){
+            let data_str = "";
+
+            for (i = 0; i < index.length; i++) {
                 data_str += index[i] + "=" + document.getElementById(contacts_inp_id[i]).value + '&';
             }
             // console.log(data_str);
@@ -344,20 +399,49 @@ adminLogin();
             xhr.open("POST", "ajax/settings_crud.php", true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-            xhr.onload = function(){
+            xhr.onload = function() {
                 var myModal = document.getElementById('contacts-s')
                 var modal = bootstrap.Modal.getInstance(myModal);
                 modal.hide();
 
-                if(this.responseText == 1){
-                    alert('success', 'Changes saved!');
+                if (this.responseText == 1) {
+                    alert('success', 'Changes saved');
                     get_contacts();
-                }
-                else{
-                    alert('error', 'No changes made!');
+                } else {
+                    alert('error', 'No Changes made!');
                 }
             }
         }
+
+        function add_member() {
+            let data = new FormData();
+            data.append('name', member_name_inp.value);
+            data.append('picture', member_picture_inp.files[0]);
+            data.append('add_member', '');
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "ajax/settings_crud.php", true);
+
+            xhr.onload = function() {
+                console.log(this.responseText);
+                var myModal = document.getElementById('team-s')
+                var modal = bootstrap.Modal.getInstance(myModal);
+                modal.hide();
+
+                if (this.responseText === '1') {
+                    alert('success', 'Changes saved');
+                    get_general();
+                } else {
+                    alert('error', 'No Changes made!');
+                }
+            }
+            xhr.send(data);
+        }
+
+        team_s_form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            add_member();
+        });
 
         window.onload = function() {
             get_general();
@@ -366,5 +450,4 @@ adminLogin();
     </script>
 
 </body>
-
 </html>
