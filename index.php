@@ -391,19 +391,27 @@
         </div>
     </div>
 
-    <!-- Our Reach Us -->
+    <!--Reach Us -->
+    <?php
+    $contact_q = "SELECT * FROM `contact_details` WHERE `sr_no`=?";
+    $values = [1];
+    $contact_r = select($contact_q, $values, 'i');
+    $contact_x = mysqli_fetch_assoc($contact_r);
+    // print_r($contact_x);
+    
+?>
 
     <h2 class="mt-5 pt-4 mb-4 text-center merienda-bold fw-bold">REACH US</h2>
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-8 p-4 mb-lg-0 mb-3 bg-white rounded">
-            <iframe class="w-100 rounded" height="320px" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d43628.924953976464!2d78.03680491205793!3d30.455695152573917!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3908d0cfa61cda5b%3A0x197fd47d980e85b1!2sMussoorie%2C%20Uttarakhand!5e0!3m2!1sen!2sin!4v1714648526014!5m2!1sen!2sin" loading="lazy"></iframe>
+            <iframe class="w-100 rounded" height="320px" src="<?php echo $contact_x['iframe'] ?>" loading="lazy"></iframe>
             </div>
             <div class="col-lg-4 col-md-4">
                 <div class="bg-white p-4 mb-4 rounded">
                     <h5>Call Us-</h5>
-                    <a href="tel: +91 444,446,6666" class="d-inline-block mb-2 text-decoration-none text-dark"><i class="bi bi-telephone-fill"></i> +91 444,446,6666</a> <br>
-                    <a href="tel: +91 666,664,4444" class="d-inline-block mb-2 text-decoration-none text-dark"><i class="bi bi-telephone-fill"></i> +91 666,664,4444</a>
+                    <a href="tel: +91 444,446,6666" class="d-inline-block mb-2 text-decoration-none text-dark"><i class="bi bi-telephone-fill"></i> +<?php echo $contact_x['pn1'] ?></a> <br>
+                    <a href="tel: +91 666,664,4444" class="d-inline-block mb-2 text-decoration-none text-dark"><i class="bi bi-telephone-fill"></i> +<?php echo $contact_x['pn2'] ?></a>
                 </div>
                 <div class="bg-white p-4 rounded mb-4">
                 <h5>Follow Us-</h5>

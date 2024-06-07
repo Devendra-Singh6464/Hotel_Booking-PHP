@@ -117,28 +117,28 @@ adminLogin();
                             </div>
 
                             <div class="col-lg-6">
-                                <h6 class="card-subtitle mb-1 poppins-regular">Social Links</h6>
-                                <p class="card-text mb-1">
-                                    <i class="bi bi-instagram"></i>
-                                    <span id="insta"></span>
-                                </p>
-                                <p class="card-text mb-1">
-                                    <i class="bi bi-facebook"></i>
-                                    <span id="fb"></span>
-                                </p>
-                                <p class="card-text mb-1">
-                                    <i class="bi bi-threads"></i>
-                                    <span id="thrd"></span>
-                                </p>
-                                <p class="card-text mb-1">
-                                    <i class="bi bi-twitter-x"></i>
-                                    <span id="tw"></span>
-                                </p>
-                                <h6 class="card-subtitle mt-3 poppins-regular">iFrame</h6>
-                                <div class="card mt-1 border-2 shadow ">
-                                    <div class="card-body">
-
-                                    </div>
+                                <div class="mb-4">
+                                    <h6 class="card-subtitle mb-1 poppins-regular">Social Links</h6>
+                                    <p class="card-text mb-1">
+                                        <i class="bi bi-instagram me-1"></i>
+                                        <span id="insta"></span>
+                                    </p>
+                                    <p class="card-text mb-1">
+                                        <i class="bi bi-facebook me-1"></i>
+                                        <span id="fb"></span>
+                                    </p>
+                                    <p class="card-text mb-1">
+                                        <i class="bi bi-threads me-1"></i>
+                                        <span id="thrd"></span>
+                                    </p>
+                                    <p class="card-text mb-1">
+                                        <i class="bi bi-twitter-x me-1"></i>
+                                        <span id="tw"></span>
+                                    </p>
+                                </div>
+                                <div class="mb-4">
+                                    <h6 class="card-subtitle mb-1 poppins-regular">iFrame</h6>
+                                    <iframe id ="iframe" class="border p-2 w-100" loading="lazy"></iframe>
                                 </div>
                             </div>
                         </div>
@@ -201,6 +201,10 @@ adminLogin();
                                                         <input type="text" name="tw" id="tw_inp" class="form-control shadow-none">
                                                     </div>
                                                 </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label poppins-regular">iframe Src</label>
+                                                    <input type="text" name="iframe" id="iframe_inp" class="form-control" required>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -223,8 +227,21 @@ adminLogin();
                                 <i class="bi bi-plus-square"></i> Add
                             </button>
                         </div>
+
                         <div class="row" id="team-data">
+                            <!-- <div class="col-md-2 mb-3">
+                                <div class="card bg-dark text-white">
+                                    <img src="../images/about/team.jpg" class="card-img">
+                                    <div class="card-img-overlay text-end">
+                                        <button type="button" class="btn btn-danger btn-sm shadow">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </div>
+                                    <p class="card-text text-center px-3 py-2">Ramdom Name</p>
+                                </div>
+                            </div> -->
                         </div>
+
                     </div>
                 </div>
 
@@ -239,16 +256,16 @@ adminLogin();
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label class="form-label">Name</label>
+                                        <label class="form-label poppins-medium">Name</label>
                                         <input type="text" name="member_name" id="member_name_inp" class="form-control" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Picture</label>
+                                        <label class="form-label poppins-medium">Picture</label>
                                         <input type="file" name="member_picture" id="member_picture_inp" accept=".png, .jpg, .jpeg, .webp" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
+                                    <button type="button" onclick="member_name.value='', member_picture.value=''" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
                                     <button type="submit" class="btn custom-bg text-white shadow-none">SUBMIT</button>
                                 </div>
                             </div>
@@ -296,8 +313,7 @@ adminLogin();
                 if (general_data.shutdown == 0) {
                     shutdown_toggle.checked = false;
                     shutdown_toggle.value = 0;
-                }
-                else {
+                } else {
                     shutdown_toggle.checked = true;
                     shutdown_toggle.value = 1;
                 }
@@ -327,7 +343,7 @@ adminLogin();
                     alert('error', 'No Changes made!');
                 }
             }
-            xhr.send('site_title='+site_title_val+'&site_about='+site_about_val+'&upd_general');
+            xhr.send('site_title=' + site_title_val + '&site_about=' + site_about_val + '&upd_general');
         }
 
         function upd_shutdown(val) {
@@ -338,18 +354,18 @@ adminLogin();
             xhr.onload = function() {
                 if (this.responseText == 1 && general_data.shutdown == 0) {
                     alert('success', 'Site has been Shutdown!');
-                } 
-                else {
+                } else {
                     alert('success', 'Shutdown mode off!');
                 }
                 get_general();
             }
 
-            xhr.send('upd_shutdown='+val);
+            xhr.send('upd_shutdown=' + val);
         }
 
         function get_contacts() {
             let contacts_p_id = ['address', 'gmap', 'pn1', 'pn2', 'email', 'insta', 'fb', 'thrd', 'tw'];
+            let iframe = document.getElementById('iframe'); 
 
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "ajax/settings_crud.php", true);
@@ -361,18 +377,19 @@ adminLogin();
                 // console.log(contacts_data);
 
                 for (i = 0; i < contacts_p_id.length; i++) {
-                    document.getElementById(contacts_p_id[i]).innerText = contacts_data[i + 1];
+                    document.getElementById(contacts_p_id[i]).innerText = contacts_data[i+1];
                 }
+                iframe.src = contacts_data[10];
                 contacts_inp(contacts_data);
             }
             xhr.send('get_contacts');
         }
 
         function contacts_inp(data) {
-            let contacts_inp_id = ['address_inp', 'gmap_inp', 'pn1_inp', 'pn2_inp', 'email_inp', 'insta_inp', 'fb_inp', 'thrd_inp', 'tw_inp'];
+            let contacts_inp_id = ['address_inp', 'gmap_inp', 'pn1_inp', 'pn2_inp', 'email_inp', 'insta_inp', 'fb_inp', 'thrd_inp', 'tw_inp', 'iframe_inp'];
 
-            for (i = 0; i < contacts_inp_id.length; i++) {
-                document.getElementById(contacts_inp_id[i]).value = data[i + 1];
+            for (i=0; i<contacts_inp_id.length; i++) {
+                document.getElementById(contacts_inp_id[i]).value = data[i+1];
                 // console.log(contacts_inp_id[i]);
                 // console.log(data[i+1]);
             }
@@ -413,6 +430,11 @@ adminLogin();
             }
         }
 
+        team_s_form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            add_member();
+        });
+
         function add_member() {
             let data = new FormData();
             data.append('name', member_name_inp.value);
@@ -428,26 +450,57 @@ adminLogin();
                 var modal = bootstrap.Modal.getInstance(myModal);
                 modal.hide();
 
-                if (this.responseText === '1') {
-                    alert('success', 'Changes saved');
+                if (this.responseText == 'inv_img') {
+                    alert('error', 'Only JPG,JPEG and PNG are allowed!');
                     get_general();
+                } else if (this.responseText == 'inv_size') {
+                    alert('error', 'Images should be less then 2MB');
+                } else if (this.responseText == 'upd_failed') {
+                    alert('error', 'Image upload failed. Server Down!')
                 } else {
-                    alert('error', 'No Changes made!');
+                    alert('success', 'New member added!');
+                    member_name_inp.value = '';
+                    member_picture_inp.value = '';
+                    get_members();
                 }
             }
             xhr.send(data);
         }
 
-        team_s_form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            add_member();
-        });
+        function get_members() {
+            let xhr = new XMLHttpRequest();
+            xhr.open("Post", "ajax/settings_crud.php", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onload = function() {
+                document.getElementById('team-data').innerHTML = this.responseText;
+            }
+            xhr.send('get_members');
+        }
+
+        function rem_member(val) {
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "ajax/settings_crud.php", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onload = function() {
+                if (this.responseText == 1) {
+                    alert('success', 'Member removed!');
+                    get_members();
+                } else {
+                    alert('error', 'Sarver down!')
+                }
+            }
+            xhr.send('rem_member=' + val);
+        }
 
         window.onload = function() {
             get_general();
             get_contacts();
+            get_members();
         }
     </script>
 
 </body>
+
 </html>
