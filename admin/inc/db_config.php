@@ -2,7 +2,7 @@
 
 $serverName = "localhost";
 $userName = "root";
-$password = "root";
+$password = "webkul";
 $database = "hotel_db";
 
 $conn = mysqli_connect($serverName, $userName, $password, $database);
